@@ -1,5 +1,5 @@
 # digits数据集
-
+为了方便可视化效果，对所有实验都先采用了PCA进行降维。
 ## K-means
 示例中实验了三种初始化方式，并应用各种指标进行评价。从表格中可以看到PCA降维后能在保证结果质量的情况下大大提高计算速度，取得较好的结果。
 ```
@@ -11,17 +11,17 @@ random          0.19s   69694   0.669   0.710   0.689   0.553   0.686   0.147
 PCA-based       0.03s   70804   0.671   0.698   0.684   0.561   0.681   0.118
 __________________________________________________________________________________
 ```
-
+/home/wyx/Figure_1.png
 ## AffinityPropagation
 
 ```
-Estimated number of clusters: 39
-Homogeneity: 0.816
-Completeness: 0.561
-V-measure: 0.665
-Adjusted Rand Index: 0.408
-Adjusted Mutual Information: 0.653
-Silhouette Coefficient: 0.180
+Estimated number of clusters: 42
+Homogeneity: 0.547
+Completeness: 0.350
+V-measure: 0.427
+Adjusted Rand Index: 0.154
+Adjusted Mutual Information: 0.404
+Silhouette Coefficient: 0.491
 ```
 
 ## MeanShift
