@@ -11,8 +11,10 @@ random          0.19s   69694   0.669   0.710   0.689   0.553   0.686   0.147
 PCA-based       0.03s   70804   0.671   0.698   0.684   0.561   0.681   0.118
 __________________________________________________________________________________
 ```
-/home/wyx/Figure_1.png
+![K-means](img/K-means.png)
+
 ## AffinityPropagation
+比较难调，最后也没调好，不太适合数字分类任务
 
 ```
 Estimated number of clusters: 42
@@ -23,11 +25,14 @@ Adjusted Rand Index: 0.154
 Adjusted Mutual Information: 0.404
 Silhouette Coefficient: 0.491
 ```
+![AffinityPropagation](img/AffinityPropagation.png)
 
 ## MeanShift
 
 `number of estimated clusters : 10`
-# SpectralClustering
+![MeanShift](img/mean_shift.png)
+
+## SpectralClustering
 ```
 Estimated number of clusters: 10
 Homogeneity: 0.159
@@ -37,14 +42,21 @@ Adjusted Rand Index: 0.039
 Adjusted Mutual Information: 0.234
 Silhouette Coefficient: 0.093
 ```
-# Agglomerative Clustering
+![SpectralClustering](img/SpectralClustering.png)
+
+## AgglomerativeClustering
 ```
 ward :  0.35s
 average :       0.25s
 complete :      0.24s
 single :        0.12s
 ```
-
+这个参数下就等同于ward hierarchical clustering方法
+![acFigure_1](homework1/digits/img/acFigure_1.png)
+另外三种方法
+![acFigure_2](homework1/digits/img/acFigure_2.png)
+![acFigure_3](homework1/digits/img/acFigure_3.png)
+![acFigure_4](homework1/digits/img/acFigure_4.png)
 ## DBSCAN
 ```
 Estimated number of clusters: 10
@@ -56,8 +68,8 @@ Adjusted Rand Index: 0.129
 Adjusted Mutual Information: 0.301
 Silhouette Coefficient: -0.201
 ```
-
-# GaussianMixture
+![DBSCAN](img/DBSCAN.png)
+## GaussianMixture
 ```
 Estimated number of clusters: 10
 Estimated number of noise points: 0
@@ -68,3 +80,6 @@ Adjusted Rand Index: 0.328
 Adjusted Mutual Information: 0.463
 Silhouette Coefficient: 0.357
 ```
+![GaussianMixture](img/GaussianMixture.png)
+
+除了没调好的那几个外，不同方法得到的结果还是挺接近的，尤其是GaussianMixture和K-means，SpectralClustering和MeanShift
