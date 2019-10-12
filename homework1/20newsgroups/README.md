@@ -40,7 +40,7 @@ V-measure: 0.289
 Adjusted Rand-Index: 0.000
 Silhouette Coefficient: 0.005
 ```
-##　MeanShift
+## MeanShift
 因为比较慢，所以调整比较少，效果不太好
 ```
 Clustering sparse data with MeanShift(bandwidth=0.1, bin_seeding=True, cluster_all=True, min_bin_freq=1,
