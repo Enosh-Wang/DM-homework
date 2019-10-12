@@ -29,7 +29,7 @@ labels_true = digits.target
 
 # #############################################################################
 # Compute Affinity Propagation
-af = AffinityPropagation(damping=1.5).fit(data) 
+af = AffinityPropagation(damping=0.9).fit(data) 
 cluster_centers_indices = af.cluster_centers_indices_
 labels = af.labels_
 
