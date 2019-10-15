@@ -87,4 +87,16 @@ Adjusted Rand-Index: 0.548
 Silhouette Coefficient: 0.006
 ```
 ## GaussianMixture
-一直内存溢出，跑不出结果
+```
+Clustering sparse data with GaussianMixture(covariance_type='full', init_params='kmeans', max_iter=20,
+                means_init=None, n_components=4, n_init=1, precisions_init=None,
+                random_state=0, reg_covar=1e-06, tol=0.001, verbose=0,
+                verbose_interval=10, warm_start=False, weights_init=None)
+done in 1457.588s
+
+Homogeneity: 0.439
+Completeness: 0.468
+V-measure: 0.453
+Adjusted Rand-Index: 0.303
+Silhouette Coefficient: 0.007
+```
