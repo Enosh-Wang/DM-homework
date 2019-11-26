@@ -131,18 +131,18 @@ if opts.n_components:
 # #############################################################################
 # Do the actual clustering
 
-km = GaussianMixture(n_components=4)
+km = GaussianMixture(n_components=4,max_iter=20,random_state=0)
 
 print("Clustering sparse data with %s" % km)
 t0 = time()
-km.fit_predict(X.toarray())
+labels_=km.fit_predict(X.toarray())
 print("done in %0.3fs" % (time() - t0))
 print()
 
-print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, km.labels_))
-print("Completeness: %0.3f" % metrics.completeness_score(labels, km.labels_))
-print("V-measure: %0.3f" % metrics.v_measure_score(labels, km.labels_))
+print("Homogeneity: %0.3f" % metrics.homogeneity_score(labels, labels_))
+print("Completeness: %0.3f" % metrics.completeness_score(labels, labels_))
+print("V-measure: %0.3f" % metrics.v_measure_score(labels, labels_))
 print("Adjusted Rand-Index: %.3f"
-      % metrics.adjusted_rand_score(labels, km.labels_))
+      % metrics.adjusted_rand_score(labels, labels_))
 print("Silhouette Coefficient: %0.3f"
-      % metrics.silhouette_score(X, km.labels_, sample_size=1000))
+      % metrics.silhouette_score(X, labels_, sample_size=1000))
