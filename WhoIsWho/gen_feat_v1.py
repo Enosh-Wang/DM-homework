@@ -17,28 +17,18 @@ test_data = pd.read_pickle('./pkl/valid_data.pkl')
 pub_info = pd.read_pickle('./pkl/pub_info.pkl')
 author_pub_detail = pd.read_pickle('./pkl/author_pub_detail.pkl')
 
-train_data.head(3)
-
-test_data.head(3)
 
 print(train_data.shape)
 print(test_data.shape)
-
+# 训练集和测试集拼接在一起
 data = pd.concat([train_data, test_data]).reset_index(drop=True)
 
-data.head()
-
 pub_info.columns = ['abstract_a', 'authors_a', 'keywords_a', 'paper_id', 'title_a', 'venue_a', 'year_a', 'orgs_a']
-pub_info.head()
 
 author_pub_detail.columns = ['author_id', 'paper_ids', 'paper_ids_len', 'abstract_b', 'keywords_b', 'title_b', 'venue_b', 'year_b', 'authors_b', 'orgs_b']
-author_pub_detail.head()
 
 data = data.merge(pub_info, 'left', 'paper_id').merge(author_pub_detail, 'left', 'author_id')
 
-data.shape
-
-data.head(3)
 
 ### delete paper_id in pos sample
 
