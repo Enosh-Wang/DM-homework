@@ -19,11 +19,11 @@ from catboost import CatBoostClassifier, Pool
 
 train_data = pd.read_pickle('./pkl/train_data.pkl')
 test_data = pd.read_pickle('./pkl/valid_data.pkl')
-
+# 为什么要拼接在一起
 data = pd.concat([train_data, test_data]).reset_index(drop=True)
-
-data.head()
-
+#       author_id author_name                                author_org  label  paper_id
+# 0     jTu2AZES      li_guo  Institute of Pharmacology and Toxicology    0.0  P9a1gcvg
+print(data.head())
 print(train_data.shape)
 print(test_data.shape)
 print(data.shape)
@@ -31,24 +31,25 @@ print(data.shape)
 ##
 time_feat_a = pd.read_pickle('./feat/time_feat_a.pkl')
 tmp = pd.read_pickle('./feat/tmp.pkl')
-
+# 所有特征
 feats = [time_feat_a, tmp]
-
+# 特征和数据拼接
 data = pd.concat([data] + feats, axis=1)
 
-data.head()
-
-drop_feat = ['author_id', 'author_name', 'author_org', 'paper_id', 'label']
+print(data.head())
+# 删掉部分特征
+drop_feat = ['author_id', 'author_name', 'author_org', 'paper_id', 'label',]
 used_feat = [c for c in data.columns if c not in drop_feat]
 print(len(used_feat))
 print(used_feat)
-
+# 处理完后在分开
 train = data[:len(train_data)]
 test = data[len(train_data):]
 
 test_x = test[used_feat]
 
 # cv split according to author names
+# 所有的名字
 train_author_name = train['author_name'].unique()
 print(len(train_author_name))
 
@@ -89,22 +90,28 @@ def f1_score(pred_dict, true_dict):
     return weighted_precision, weighted_recall, weighted_f1
 
 from sklearn.model_selection import KFold
-
+# 二分类预测，用于结果保存
 preds = np.zeros((test.shape[0], 2))
 scores = []
 f1_scores = []
 has_saved = False
 imp = pd.DataFrame()
 imp['feat'] = used_feat
-
+# k折交叉验证
 kfold = KFold(n_splits=5, shuffle=True, random_state=42)
 for index, (tr_idx, va_idx) in enumerate(kfold.split(train_author_name)):
     print('*' * 30)
+    # 得到一批不重合的名字
     trn_aname, val_aname = train_author_name[tr_idx], train_author_name[va_idx]
+    # 把与名字对应的数据提取出来 
     trn_dat = train[train['author_name'].isin(trn_aname)]
     val_dat = train[train['author_name'].isin(val_aname)]
+    # 划分特征和类别标签
     X_train, y_train, X_valid, y_valid = trn_dat[used_feat], trn_dat['label'], val_dat[used_feat], val_dat['label']
     cate_features = []
+    print(X_train)
+    print("!!")
+    print(X_valid)
     train_pool = Pool(X_train, y_train, cat_features=cate_features)
     eval_pool = Pool(X_valid, y_valid,cat_features=cate_features)
     if not has_saved: 
@@ -149,15 +156,14 @@ for index, (tr_idx, va_idx) in enumerate(kfold.split(train_author_name)):
 #     mdls.append(cbt_model)
 
 imp.sort_values(by='score1', ascending=False)
-
+print(imp)
 test_data['pred'] = preds[:, 1]
 
 test_data.head()
 
 result_dict = gen_dict(test_data, 'pred')
 
-len(result_dict)
-
+# 保存结果
 import json
 import time
 localtime = time.localtime(time.time())

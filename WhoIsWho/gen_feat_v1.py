@@ -29,7 +29,7 @@ author_pub_detail.columns = ['author_id', 'paper_ids', 'paper_ids_len', 'abstrac
 
 data = data.merge(pub_info, 'left', 'paper_id').merge(author_pub_detail, 'left', 'author_id')
 
-
+#print(data.head())
 ### delete paper_id in pos sample
 
 def pidx(p, ps):
@@ -40,13 +40,13 @@ def pidx(p, ps):
             break
     return ans
 
-
+# paper在作者档案中的索引
 data['idx'] = data.apply(lambda row: pidx(row['paper_id'], row['paper_ids']) if row['label'] == 1 else np.nan, axis=1)
 
-from tqdm import tqdm_notebook
 
+# 从作者的论文档案中删去待分类的论文
 cols = ['abstract_b', 'keywords_b', 'title_b', 'venue_b', 'year_b', 'authors_b', 'orgs_b']
-for i in tqdm_notebook(range(len(data))):
+for i in range(len(data)):
     if pd.isna(data.loc[i, 'idx']):
         continue
     for c in cols:
@@ -55,9 +55,9 @@ for i in tqdm_notebook(range(len(data))):
         data.set_value(i, c, v)
 #         data.loc[i, c] = frozenset(v)
 
-data.to_pickle('./pkl/data.pkl')
+#data.to_pickle('./pkl/data.pkl')
 
-print(data.columns)
+#print(data.columns)
 
 ### year
 
@@ -83,49 +83,3 @@ cols = ['year_a', 'year_b_min', 'year_b_max', 'year_b_mean', 'year_b_std', 'year
 
 data[cols].to_pickle('./feat/time_feat_a.pkl')
 
-### 'authors', 'orgs'
-
-tmp = data[['author_org', 'authors_a', 'orgs_a', 'authors_b', 'orgs_b']]
-
-# import multiprocessing as mp
-
-# def split_df(df, n):
-#     chunk_size = int(np.ceil(len(df) / n))
-#     return [df[i*chunk_size:(i+1)*chunk_size] for i in range(n)]
-
-# chunk_list = split_df(tmp, 100)
-
-def func(a, b):
-    cnt = 0
-    for x in b:
-        for y in x:
-            if a == y:
-                cnt += 1
-    return cnt
-
-# def process(df):
-#     return df.apply(lambda row: func(row['author_org'], row['orgs_b']), axis=1)
- 
-# with mp.Pool(8) as pool:
-#     ret = pool.map(process, chunk_list)
-#     print(len(ret))
-
-
-tmp['author_org_in_orgs_b_times'] = tmp.apply(lambda row: func(row['author_org'], row['orgs_b']), axis=1)
-
-def funct(a, b):
-    b = set([y for x in b for y in x])
-    # b = set([x for x in b])
-    a = set(a)
-    return len(a & b)
-
-
-tmp['author_interset_num'] = tmp.apply(lambda row: funct(row['authors_a'], row['authors_b']), axis=1)
-
-tmp['author_interset_num/paper_ids_len'] = (tmp['author_interset_num'] / (data['paper_ids_len'] - (data['label'] == 1).astype(int))).fillna(0)
-
-tmp.head()
-
-tmp['author_interset_num'].value_counts()
-
-tmp[['author_org_in_orgs_b_times', 'author_interset_num', 'author_interset_num/paper_ids_len']].to_pickle('./feat/tmp.pkl')

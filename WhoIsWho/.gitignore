@@ -2,3 +2,6 @@ data/*
 .vscode/
 feat/*
 pkl/*
+out/*
+catboost_info/*
+*.out

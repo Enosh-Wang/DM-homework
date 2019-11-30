@@ -92,8 +92,8 @@ print(valid_pub_info.head())
 
 valid_pub_info.to_pickle('./pkl/valid_pub_info.pkl')
 
-### pub info
-
+### pub info 论文元信息 把三部分论文元信息拼接去重后规范了一下数据格式
+# 删除重复的paper_id，保留第一次出现的行
 pub_info = pd.concat([whole_pub_info, train_pub_info, valid_pub_info]).drop_duplicates(subset='paper_id', keep='first')
 
 pub_info['orgs'] = pub_info['authors'].apply(lambda x: [ao['org'] for ao in x if 'org' in ao])
@@ -102,13 +102,15 @@ pub_info['authors'] = pub_info['authors'].apply(lambda x: [ao['name'] for ao in 
 pub_info['year'] = pub_info['year'].fillna(0).replace('', 0).astype(int)
 
 pub_info['abstract'] = pub_info['abstract'].fillna(' ').replace('', ' ')
-
+pub_info['keywords'] = pub_info['keywords'].fillna(' ').replace('', ' ')
+pub_info['venue'] = pub_info['venue'].fillna(' ').replace('', ' ')
+pub_info['title'] = pub_info['title'].fillna(' ').replace('', ' ')
 print(pub_info.head())
 
 pub_info.to_pickle('./pkl/pub_info.pkl')
 
 ### author_pub_detail
-
+# 将whole_author和train_author两个数据集里相同作者的paper合并了
 author_pub_ids = whole_author_name_paper_ids[['author_id','paper_ids']].merge(train_author_paper_ids, 'left', 'author_id')
 
 author_pub_ids['paper_ids_x_len'] = author_pub_ids['paper_ids_x'].apply(len)
@@ -127,7 +129,7 @@ author_pub_ids['paper_ids_len'].describe()
 pub_info = pub_info.set_index('paper_id')
 
 print(pub_info.head())
-
+# 把pub_info里的信息添加进去，最终包含所有数据集里作者对应的论文和论文元数据，一个作者一行
 # author_id paper_ids paper_ids_len abstracts keywords titles venues years authors orgs
 
 
