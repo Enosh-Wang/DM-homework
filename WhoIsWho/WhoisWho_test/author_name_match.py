@@ -29,11 +29,7 @@ valid_pub_info = pd.read_pickle('./pkl/valid_pub_info.pkl')
 cna_valid_unass = pd.read_pickle('./pkl/cna_valid_unass.pkl')
 
 pub_info = pd.concat([whole_pub_info, train_pub_info, valid_pub_info])
-print(pub_info.shape)
 pub_info = pub_info.drop_duplicates(subset='paper_id', keep='first')
-print(pub_info.shape)
-
-print(whole_author_name_paper_ids.head())
 
 # id 到 name 列表的映射
 paper_authors = {}
@@ -46,19 +42,19 @@ for author_name, paper_ids in whole_author_name_paper_ids[['author_name', 'paper
 
 paper_authors_df = pd.DataFrame([(k, v) for k,v in paper_authors.items()], columns=['paper_id', 'author_ids'])
 
+
 pub_info['author_names'] = pub_info['authors'].apply(lambda x: [ao['name'] for ao in x])
+
 
 pub_info = pub_info.merge(paper_authors_df, 'left', 'paper_id')
 
-print(pub_info.head())
+
 
 
 def score(n1, n2):
     n1 = ''.join(filter(str.isalpha, n1.lower()))
     if check_chs(n1):
-#         print(n1)
         n1 = to_pinyin(n1)
-#         print(n1)
     n2 = ''.join(filter(str.isalpha, n2.lower()))
     counter = defaultdict(int)
     score = 0
@@ -72,7 +68,6 @@ def score(n1, n2):
     score += np.sum(list(counter.values()))
     return score
     
-print(score('hello world', 'world hello'))
 
 from tqdm import tqdm
 author_name_map = {}
@@ -83,12 +78,10 @@ for author_names, author_ids in tqdm(pub_info[['author_names', 'author_ids']].va
         dis = []
         for an in author_names:
             dis.append(score(an, aid))
-        cor = author_names[np.argmin(dis)]
-        author_name_map[cor] = aid
-
-for k in author_name_map.keys():
-    if check_chs(k):
-        print(k)
+        for i in range(len(dis)):
+            if dis[i] == 0:
+                cor = author_names[i]
+                author_name_map[cor] = aid
 
 import pickle
 with open('./pkl/author_name_map.pkl', 'wb') as file:

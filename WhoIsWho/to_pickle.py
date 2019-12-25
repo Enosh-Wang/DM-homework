@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 from collections import OrderedDict
-from tqdm import tqdm_notebook
+from tqdm import tqdm
 
 pkl_path = './pkl'
 if not os.path.exists(pkl_path):

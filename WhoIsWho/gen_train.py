@@ -19,16 +19,12 @@ with open('./pkl/author_org_map.pkl', 'rb') as file:
 whole_author_name_paper_ids = pd.read_pickle('./pkl/whole_author_name_paper_ids.pkl')
 # author_name, author_ids
 train_author_name_ids = pd.read_pickle('./pkl/train_author_name_ids.pkl')
-# author_name, author_ids, author_nums
-valid_data = pd.read_pickle('./pkl/valid_data.pkl')
 
-print('valid: ', len(set(valid_data['author_name'])))
 print('train: ', len(set(train_author_name_ids['author_name'])))
 print('whole: ', len(set(whole_author_name_paper_ids['author_name'])))
 print('-'*60)
 # & 集合的交集
-print('valid & train: ', len(set(train_author_name_ids['author_name']) & set(valid_data['author_name'])))
-print('whole & valid: ', len(set(whole_author_name_paper_ids['author_name']) & set(valid_data['author_name'])))
+
 print('whole & train: ', len(set(whole_author_name_paper_ids['author_name']) & set(train_author_name_ids['author_name'])))
 
 # author_id, paper_ids

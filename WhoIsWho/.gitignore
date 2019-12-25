@@ -5,3 +5,8 @@ pkl/*
 out/*
 catboost_info/*
 *.out
+all.dict
+*.mm*
+lda*
+lsi*
+*model

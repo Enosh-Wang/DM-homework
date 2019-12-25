@@ -74,9 +74,5 @@ for author_name, paper_ids in tqdm_notebook(author_name_paper_ids[['author_name'
                 org = ao.get('org')
         author_org_map[author_name][pid] = org
 
-author_org_map['li_guo']
-
-author_org_map['li_guo']['UG32p2zs']
-
 with open('./pkl/author_org_map.pkl', 'wb') as file:
     pickle.dump(author_org_map, file)

@@ -23,9 +23,9 @@ print(test_data.shape)
 # 训练集和测试集拼接在一起
 data = pd.concat([train_data, test_data]).reset_index(drop=True)
 
-pub_info.columns = ['abstract_a', 'authors_a', 'keywords_a', 'paper_id', 'title_a', 'venue_a', 'year_a', 'orgs_a', 'lda_a']
+pub_info.columns = ['abstract_a', 'authors_a', 'keywords_a', 'paper_id', 'title_a', 'venue_a', 'year_a', 'orgs_a', 'lsi_a']
 
-author_pub_detail.columns = ['author_id', 'paper_ids', 'paper_ids_len', 'abstract_b', 'keywords_b', 'title_b', 'venue_b', 'year_b', 'authors_b', 'orgs_b', 'lda_b']
+author_pub_detail.columns = ['author_id', 'paper_ids', 'paper_ids_len', 'abstract_b', 'keywords_b', 'title_b', 'venue_b', 'year_b', 'authors_b', 'orgs_b', 'lsi_b']
 
 data = data.merge(pub_info, 'left', 'paper_id').merge(author_pub_detail, 'left', 'author_id')
 
@@ -44,7 +44,7 @@ data['idx'] = data.apply(lambda row: pidx(row['paper_id'], row['paper_ids']) if 
 
 
 # 从作者的论文档案中删去待分类的论文
-cols = ['abstract_b', 'keywords_b', 'title_b', 'venue_b', 'year_b', 'authors_b', 'orgs_b']
+cols = ['abstract_b', 'keywords_b', 'title_b', 'venue_b', 'year_b', 'authors_b', 'orgs_b','lsi_b']
 for i in range(len(data)):
     if pd.isna(data.loc[i, 'idx']):
         continue
@@ -56,9 +56,10 @@ for i in range(len(data)):
 data.to_pickle('./pkl/data.pkl')
 
 ### year
-
+data['year_b'] = data['year_b'].fillna(0)
+data['year_b'] = data['year_b'].apply(lambda x: [0] if x == 0 else x)
 data['year_b'] = data['year_b'].apply(lambda x: [0] if len(x) == 0 else x)
-
+print(data['year_b'])
 data['year_b_min'] = data['year_b'].apply(np.min)
 data['year_b_max'] = data['year_b'].apply(np.max)
 data['year_b_mean'] = data['year_b'].apply(np.mean)
